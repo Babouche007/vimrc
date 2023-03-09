@@ -1,8 +1,33 @@
 set nocompatible
-    
-if has('filetype')
-  filetype indent plugin on
-endif
+filetype off
+
+"=================================================
+"                Vundle Config                   #
+"=================================================
+
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+" alternatively, pass a path where Vundle should install bundles
+"let path = '~/some/path/here'
+"call vundle#rc(path)
+
+" let Vundle manage Vundle, required
+Bundle 'gmarik/vundle'
+
+"=================================================
+"		   My Plugins                    #
+"=================================================
+
+Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/nerdtree'
+
+"=================================================
+"                   Global                       #
+"=================================================
+"
+filetype plugin indent on     
 
 if has('syntax')
   syntax on
@@ -36,4 +61,15 @@ set number
 set cursorline
 set autoindent
 
+"=================================================
+"                Color Scheme                    #
+"=================================================
+
 colorscheme badwolf
+
+"=================================================
+"		   Shortcuts                     #
+"=================================================
+
+nnoremap <C-t> :NERDTreeToggle <CR>
+nnoremap <C-g> :Gdiffsplit <CR>
