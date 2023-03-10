@@ -23,7 +23,7 @@ Bundle 'gmarik/vundle'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'MultiTabs'
-Plugin 'altercation/vim-colors-solarized'
+Plugin 'valloric/youcompleteme'
 
 "=================================================
 "                   Global                       #
