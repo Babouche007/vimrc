@@ -23,7 +23,7 @@ Bundle 'gmarik/vundle'
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'MultiTabs'
-Plugin 'valloric/youcompleteme'
+Plugin 'raimondi/delimitmate'
 
 "=================================================
 "                   Global                       #
@@ -76,3 +76,4 @@ colorscheme PaperColor
 
 nnoremap <C-t> :NERDTreeToggle <CR>
 nnoremap <C-g> :Gdiffsplit <CR>
+nnoremap <tab> :tabnext <CR>
