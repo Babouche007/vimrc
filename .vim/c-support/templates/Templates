@@ -1,0 +1,16 @@
+§ =============================================================
+§  User Macros
+§ =============================================================
+
+SetMacro( 'AUTHOR',      'Baptiste Perrier' )
+SetMacro( 'AUTHORREF',   '' )
+SetMacro( 'COMPANY',     'Epita' )
+SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
+SetMacro( 'EMAIL',       'baptiste.perrier@epita.fr' )
+SetMacro( 'LICENSE',     'GNU General Public License' )
+SetMacro( 'ORGANIZATION','' )
+
+§ =============================================================
+§  File Includes and Shortcuts
+§ =============================================================
+
