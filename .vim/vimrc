@@ -1,38 +1,55 @@
-set nocompatible
-filetype off
+filetype off                  " required
 
-"=================================================
-"                Vundle Config                   #
-"=================================================
+set rtp+=~/.vim/bundle/Vundle.vim
+
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
 
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-" alternatively, pass a path where Vundle should install bundles
-"let path = '~/some/path/here'
-"call vundle#rc(path)
+"My plugins
+"===Productivity===
+Plugin 'aserebryakov/vim-todo-lists'
+"===Web===
+"===NerdTree===
+Plugin 'preservim/nerdtree'
+Plugin 'PhilRunninger/nerdtree-buffer-ops'
+"Plugin 'ryanoasis/vim-devicons'
+Plugin 'PhilRunninger/nerdtree-visual-selection'
 
-" let Vundle manage Vundle, required
-Bundle 'gmarik/vundle'
+"===Coding===
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'Lokaltog/powerline'
+Plugin 'tpope/vim-surround' 
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'NLKNguyen/papercolor-theme'
+Plugin 'frazrepo/vim-rainbow'
 
-"=================================================
-"		   My Plugins                    #
-"=================================================
+"===Completion===
 
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'mattn/vim-lsp-settings'
+Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'hrsh7th/vim-vsnip-integ'
+Plugin 'Valloric/YouCompleteMe'
+"Plugin 'rhysd/vim-clang-format'
+"Plugin 'neoclide/coc.nvim', {'branch': 'master', 'do': 'npm ci'}
+
+"===Git===
 Plugin 'tpope/vim-fugitive'
-Plugin 'scrooloose/nerdtree'
-Plugin 'MultiTabs'
-Plugin 'raimondi/delimitmate'
+Plugin 'airblade/vim-gitgutter'
 
-"=================================================
-"                   Global                       #
-"=================================================
-"
-filetype plugin indent on     
+call vundle#end()
+
+filetype plugin indent on 
+
+if has('filetype')
+	filetype indent plugin on
+endif
 
 if has('syntax')
-  syntax on
+	syntax on
 endif
 
 set wildmenu
@@ -48,8 +65,10 @@ set backspace=indent,eol,start
 set autoindent
 set shiftwidth=4
 set softtabstop=4
+set tabstop=4
 set smarttab
 set nostartofline
+set expandtab
 
 set ruler
 
@@ -62,18 +81,116 @@ set visualbell
 set number
 set cursorline
 set autoindent
+set listchars=tab:\ \ ,eol:$
+set list
 
-"=================================================
-"                Color Scheme                    #
-"=================================================
-
-set background=dark 
+set background=dark
 colorscheme PaperColor
 
-"=================================================
-"		   Shortcuts                     #
-"=================================================
+"At start
 
-nnoremap <C-t> :NERDTreeToggle <CR>
-nnoremap <C-g> :Gdiffsplit <CR>
-nnoremap <tab> :tabnext <CR>
+autocmd VimEnter * NERDTree | wincmd p
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") 
+      \ && b:NERDTree.isTabTree()) | q | endif
+"Binding
+
+nnoremap <C-t> :wincmd p<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-m> :NERDTreeClose<CR>
+nnoremap <C-r> :term<CR>
+
+
+let g:airline_powerline_fonts = 1
+let g:airline_theme='violet'
+let g:airline#extensions#tabline#enabled = 0
+let g:airline_statusline_ontop=0
+let g:airline_disable_statusline = 0
+"""""""""""" Start Powerline Settings """"""""""""""""
+
+set guifont=Inconsolata\ for\ Powerline:h15
+let g:Powerline_symbols = 'fancy'
+set encoding=utf-8
+set t_Co=256
+set fillchars+=stl:\ ,stlnc:\
+set term=xterm-256color
+set termencoding=utf-8
+
+if has("gui_running")
+	let s:uname = system("uname")
+	if s:uname == "Darwin\n"
+		set guifont=Source\ Code\ Pro\ for\ Powerline:h15
+		colorscheme PaperColor              " set color scheme
+	endif
+endif
+
+""""""""""" END of PowerLine Settings  """""""""""""""
+"""""""""""""Rainbow Bracket""""""""""""
+
+let g:rainbow_active = 1
+
+""""""""""""YouCompleteME"""""""""""""
+
+let g:ycm_show_diagnostics_ui = 0
+
+""""""""""""""Setup LSP""""""""""""""""""""
+
+if executable('pylsp')
+    " pip install python-lsp-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pylsp',
+        \ 'cmd': {server_info->['pylsp']},
+        \ 'allowlist': ['python'],
+        \ })
+endif
+
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=yes
+    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    nmap <buffer> gr <plug>(lsp-references)
+    nmap <buffer> gi <plug>(lsp-implementation)
+    nmap <buffer> gt <plug>(lsp-type-definition)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+    nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+    nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+    nmap <buffer> K <plug>(lsp-hover)
+    nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+    nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
+
+    let g:lsp_format_sync_timeout = 1000
+    autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+
+    " refer to doc to add more commands
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr>    pumvisible() ? asyncomplete#close_popup() : "\<cr>"
+
+let g:asyncomplete_auto_popup = 0
+
+function! s:check_back_space() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ asyncomplete#force_refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" allow modifying the completeopt variable, or it will
+" be overridden all the time
+let g:asyncomplete_auto_completeopt = 0
+
+set completeopt=menuone,noinsert,noselect,preview
